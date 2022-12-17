@@ -1,13 +1,11 @@
 from daystrategy import DayStrategy
-from dataclasses import dataclass
-from typing import Callable
 import re
 
 class Day5(DayStrategy):
     def __init__(self):
         self.supply_stack = {}
         self.crate_width = 3
-        self.separator_width = 1 #  The number of spaces between the columns of crates
+        self.separator_width = 1  # The number of spaces between the columns of crates
 
         self.orders = []
 
@@ -75,11 +73,13 @@ class Day5(DayStrategy):
 
             key = ((position - number_of_separators * self.separator_width) // self.crate_width) + 1
 
-            try:
-                self.supply_stack[key].append(line[position: position + self.crate_width])
-            except KeyError:
-                self.supply_stack[key] = []
-                self.supply_stack[key].append(line[position: position + self.crate_width])
+            while True:
+                try:
+                    self.supply_stack[key].append(line[position: position + self.crate_width])
+
+                    break
+                except KeyError:
+                    self.supply_stack[key] = []
 
         return stack_constructed
 
