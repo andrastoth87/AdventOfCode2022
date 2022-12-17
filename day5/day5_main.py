@@ -1,6 +1,7 @@
 from daystrategy import DayStrategy
 import re
 
+
 class Day5(DayStrategy):
     def __init__(self):
         self.supply_stack = {}
@@ -8,7 +9,6 @@ class Day5(DayStrategy):
         self.separator_width = 1  # The number of spaces between the columns of crates
 
         self.orders = []
-
 
     def solve(self) -> None:
         """ The main function to solve the task. """
