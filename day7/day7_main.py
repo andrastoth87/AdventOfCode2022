@@ -14,7 +14,7 @@ class Day7(DayStrategy):
         input_tree = self.process_input(r'day7/input.txt')
 
         tree = self.construct_tree(input_tree)
-        print(tree.get_size_sum())
+        print(self.get_size_sum(tree))
 
     def process_input(self, input_path: str):
         return self.read_input(input_path)
@@ -40,7 +40,7 @@ class Day7(DayStrategy):
 
             elif matches[0] == 'dir':
                 # It`s a directory
-                current_node.add_child(Node(current_node, Data(name=matches[1], data_type=DataType.DIRECTORY)))
+                current_node.add_child(Node(current_node, Data(name=matches[1], data_type=DataType.DIRECTORY, size=0)))
 
             elif matches[0].isdigit():
                 # It's a file
@@ -48,16 +48,11 @@ class Day7(DayStrategy):
 
         return root
 
-    def calculate_size_sum(self, tree: Node, size=0) -> int:
-        """ Calculates the sizes of all the directories. """
-        if tree is None:
-            return 0
-
+    def get_size_sum(self, node: Node, size=0):
         size_sum = size
 
-        for child in tree.children:
-            if child.data.data_type == DataType.FILE:
-                size_sum += self.calculate_size_sum(child, size_sum)
+        for child in node.children:
+            size_sum += child.get_size_sum(child.data.size)
 
         return size_sum
 
@@ -94,9 +89,7 @@ class Node:
         size_sum = size
 
         for child in self.children:
-            if child.data.data_type == DataType.FILE:
-                print(child.data.name)
-                size_sum += child.get_size_sum(size_sum + child.data.size)
+            size_sum += child.get_size_sum(child.data.size)
 
         return size_sum
 
