@@ -14,47 +14,67 @@ class Day7(DayStrategy):
         input_tree = self.process_input(r'day7/input.txt')
 
         tree = self.construct_tree(input_tree)
-        print(self.get_size_sum(tree))
+        # print(self.get_content_size(tree))
+
+        sizes = {}
+
+        for dir in tree.get_all_directories():
+            sizes[dir.data.name] = self.get_content_size(dir)
+
+        size_sum = 0
+
+        for size in sizes.values():
+            if size <= 100000:
+                size_sum += size
+
+        print(size_sum)
 
     def process_input(self, input_path: str):
         return self.read_input(input_path)
 
-    def construct_tree(self, input_tree) -> Node:
+    @staticmethod
+    def construct_tree(input_tree) -> Node:
         current_node = None
         root = None
 
         for line in input_tree:
-            matches = line.split()
+            keyword, *other = line.split()
 
-            if matches[0] == '$':
+            # Pad the list because we always want it to contain 2 elements
+            other += [''] * (2 - len(other))
+
+            if keyword == '$':
                 # It`s a command
-                if matches[1] == 'cd':
-                    if matches[2] == '..':
+                command, option = other
+
+                if command == 'cd':
+                    if option == '..':
                         current_node = current_node.get_parent()
                     else:
                         if current_node is None:
-                            current_node = Node(None, Data(name=matches[2], data_type=DataType.DIRECTORY))
+                            current_node = Node(None, Data(name=option, data_type=DataType.DIRECTORY))
                             root = current_node
 
-                        current_node = current_node.get_directory_by_name(matches[2])
+                        current_node = current_node.get_directory_by_name(option)
 
-            elif matches[0] == 'dir':
+            elif keyword == 'dir':
                 # It`s a directory
-                current_node.add_child(Node(current_node, Data(name=matches[1], data_type=DataType.DIRECTORY, size=0)))
+                name, = other
+                current_node.add_child(Node(current_node, Data(name=name, data_type=DataType.DIRECTORY, size=0)))
 
-            elif matches[0].isdigit():
+            else:
                 # It's a file
-                current_node.add_child(Node(current_node, Data(name=matches[1], data_type=DataType.FILE, size=int(matches[0]))))
+                name, = other
+                current_node.add_child(Node(current_node, Data(name=name, data_type=DataType.FILE, size=int(keyword))))
 
         return root
 
-    def get_size_sum(self, node: Node, size=0):
-        size_sum = size
-
+    @staticmethod
+    def get_content_size(node: Node, size=0):
         for child in node.children:
-            size_sum += child.get_size_sum(child.data.size)
+            size += child.get_content_size(child.data.size)
 
-        return size_sum
+        return size
 
 
 class Node:
@@ -72,26 +92,24 @@ class Node:
 
         return self
 
-    def get_all_directories(self) -> list:
-        directory_nodes = []
-
+    def get_all_directories(self, directories: list[Node] = []) -> list:
         for child in self.children:
             if child.data.data_type == DataType.DIRECTORY:
-                directory_nodes.append(child)
+                directories.append(child)
 
-        return directory_nodes
+            child.get_all_directories(directories)
+
+        return directories
 
     def get_parent(self) -> Node:
         """ Returns the parent if it`s a child otherwise it will return self. """
         return self.parent if self.parent is not None else self
 
-    def get_size_sum(self, size=0):
-        size_sum = size
-
+    def get_content_size(self, size=0):
         for child in self.children:
-            size_sum += child.get_size_sum(child.data.size)
+            size += child.get_content_size(child.data.size)
 
-        return size_sum
+        return size
 
     def add_child(self, child: Node):
         self.children.append(child)
