@@ -84,9 +84,10 @@ class Day5(DayStrategy):
         return stack_constructed
 
     def add_order(self, line: str) -> None:
-        match = re.match(r'move (\d*) from (\d*) to (\d*)', line)
+        split_line = line.split()
 
-        if match is None:
+        if not split_line:
             return
 
-        self.orders.append([int(x) for x in match.groups()])
+        # Slice the list starting from it`s second element.
+        self.orders.append([int(x) for x in split_line[1::2]])
