@@ -13,28 +13,15 @@ class Day7(DayStrategy):
         """ The main function to solve the task. """
         input_tree = self.process_input(r'day7/input.txt')
 
-        dir_count = 0
-        for l in input_tree:
-            split = l.split()
-
-            if split[0] == 'dir':
-                dir_count += 1
-
         tree = self.construct_tree(input_tree)
         self.print_tree(tree)
 
-        sizes = {}
+        sizes = []
 
         for directory in self.get_all_directories(tree, []):
-            sizes[directory.data.name] = self.get_content_size(directory)
+            sizes.append(self.get_content_size(directory))
 
-        size_sum = 0
-
-        for size in sizes.values():
-            if size <= 100000:
-                size_sum += size
-
-        print(size_sum)
+        print(f'\nSum of size of directories that ar at most 100000: {sum(i for i in sizes if i <= 100000)}')
 
     def process_input(self, input_path: str):
         return self.read_input(input_path)
