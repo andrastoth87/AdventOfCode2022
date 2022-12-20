@@ -21,7 +21,7 @@ class Day7(DayStrategy):
         for directory in self.get_all_directories(tree, []):
             sizes.append(self.get_content_size(directory))
 
-        print(f'\nSum of size of directories that ar at most 100000: {sum(i for i in sizes if i <= 100000)}')
+        print(f'\nSum of size of directories that are at most 100000: {sum(i for i in sizes if i <= 100000)}')
 
     def process_input(self, input_path: str):
         return self.read_input(input_path)
