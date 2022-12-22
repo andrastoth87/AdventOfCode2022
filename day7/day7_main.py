@@ -23,6 +23,16 @@ class Day7(DayStrategy):
 
         print(f'\nSum of size of directories that are at most 100000: {sum(i for i in sizes if i <= 100000)}')
 
+        # Use _ with numbers for better readability
+        max_available_space = 70_000_000
+        required_space = 30_000_000
+        used_space = self.get_content_size(tree)
+        free_space = max_available_space - used_space
+
+        smallest_match = next((i for i in sorted(sizes) if free_space + i >= required_space), None)
+
+        print(f'Smallest directory to delete to free up the required space: {smallest_match}')
+
     def process_input(self, input_path: str):
         return self.read_input(input_path)
 
