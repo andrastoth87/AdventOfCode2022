@@ -6,6 +6,7 @@ from day4.day4_main import Day4
 from day5.day5_main import Day5
 from day6.day6_main import Day6
 from day7.day7_main import Day7
+from day8.day8_main import Day8
 
 
 def main(strategy: DayStrategy) -> None:
@@ -13,4 +14,4 @@ def main(strategy: DayStrategy) -> None:
 
 
 if __name__ == '__main__':
-    main(Day7())
+    main(Day8())

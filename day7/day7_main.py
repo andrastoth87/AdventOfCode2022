@@ -13,9 +13,9 @@ class Day7(DayStrategy):
 
     def solve(self) -> None:
         """ The main function to solve the task. """
-        input_tree = self.process_input(r'day7/input.txt')
+        commands = self.process_input(r'day7/input.txt')
 
-        tree = self.construct_tree(input_tree)
+        tree = self.construct_tree(commands)
         self.print_tree(tree)
 
         sizes = []
