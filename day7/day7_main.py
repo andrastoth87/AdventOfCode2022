@@ -2,12 +2,14 @@ from __future__ import annotations
 from daystrategy import DayStrategy
 from dataclasses import dataclass
 from typing import Optional
-import re
 
 
 class Day7(DayStrategy):
     def __init__(self):
-        pass
+        # Use _ with numbers for better readability
+        self.MAX_AVAILABLE_SPACE = 70_000_000
+        self.REQUIRED_SPACE = 30_000_000
+        self.MAX_DIRECTORY_SIZE = 100_000
 
     def solve(self) -> None:
         """ The main function to solve the task. """
@@ -21,15 +23,12 @@ class Day7(DayStrategy):
         for directory in self.get_all_directories(tree, []):
             sizes.append(self.get_content_size(directory))
 
-        print(f'\nSum of size of directories that are at most 100000: {sum(i for i in sizes if i <= 100000)}')
+        print(f'\nSum of size of directories that are at most 100 000: {sum(i for i in sizes if i <= self.MAX_DIRECTORY_SIZE)}')
 
-        # Use _ with numbers for better readability
-        max_available_space = 70_000_000
-        required_space = 30_000_000
         used_space = self.get_content_size(tree)
-        free_space = max_available_space - used_space
+        free_space = self.MAX_AVAILABLE_SPACE - used_space
 
-        smallest_match = next((i for i in sorted(sizes) if free_space + i >= required_space), None)
+        smallest_match = next((i for i in sorted(sizes) if free_space + i >= self.REQUIRED_SPACE), None)
 
         print(f'Smallest directory to delete to free up the required space: {smallest_match}')
 
@@ -46,7 +45,7 @@ class Day7(DayStrategy):
 
             if keyword == '$':
                 # It`s a command
-                # Pad the list because we always want it to contain 2 elements for commands
+                # Pad the list to two elements
                 other += [''] * (2 - len(other))
 
                 command, option = other
@@ -100,12 +99,6 @@ class Day7(DayStrategy):
 
         return directories
 
-    # def get_content_size(self, size=0):
-    #     for child in self.children:
-    #         size += child.get_content_size(child.data.size)
-    #
-    #     return size
-
 
 class Node:
     def __init__(self, parent: Optional[Node], data: Data):
@@ -133,6 +126,7 @@ class Node:
 class DataType:
     FILE = 'FILE'
     DIRECTORY = 'DIRECTORY'
+
 
 @dataclass()
 class Data:
