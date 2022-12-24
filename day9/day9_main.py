@@ -1,6 +1,6 @@
 from __future__ import annotations
 from daystrategy import DayStrategy
-from dataclasses import dataclass, astuple, field
+from dataclasses import dataclass, astuple
 
 
 class Day9(DayStrategy):
@@ -62,12 +62,10 @@ class Day9(DayStrategy):
                 self.knots_positions[i].y += self.sign(y_distance)
 
     def mark_tail_position(self) -> None:
-        tail_position = self.knots_positions[-1]
-
         try:
-            self.visited_positions[(tail_position.x, tail_position.y)] += 1
+            self.visited_positions[astuple(self.knots_positions[-1])] += 1
         except KeyError:
-            self.visited_positions[(tail_position.x, tail_position.y)] = 1
+            self.visited_positions[astuple(self.knots_positions[-1])] = 1
 
     @staticmethod
     def sign(x: int) -> int:
