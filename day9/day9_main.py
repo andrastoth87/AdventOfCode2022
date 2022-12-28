@@ -7,7 +7,7 @@ class Day9(DayStrategy):
     def __init__(self):
         self.KNOT_COUNT = 10
 
-        # HEAD will be knots_positions[0], tail will be knots_positions[-1]
+        # HEAD will be knots_positions[0], Tail will be knots_positions[-1]
         self.knots_positions: list[IntVector2] = []
         self.visited_positions: dict[tuple[int, int], int] = {}
 
